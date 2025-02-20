@@ -1,4 +1,4 @@
-package ru.abramov;
+package ru.abramov.blog;
 
 public class Main {
     public static void main(String[] args) {
