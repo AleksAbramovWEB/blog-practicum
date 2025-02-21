@@ -3,11 +3,13 @@ package ru.abramov.blog.models;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,4 +40,7 @@ public class Post {
 
     @MappedCollection(idColumn = "post_id")
     private List<Comment> comments;
+
+    @Transient
+    private MultipartFile image;
 }

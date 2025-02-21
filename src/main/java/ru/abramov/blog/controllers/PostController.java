@@ -1,10 +1,10 @@
 package ru.abramov.blog.controllers;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ru.abramov.blog.models.Post;
 import ru.abramov.blog.services.PostService;
 import org.springframework.ui.Model;
@@ -29,18 +29,18 @@ public class PostController {
 
     @GetMapping("/post/{id}")
     public String getPost(@PathVariable Long id, Model model) {
-        model.addAttribute("posts", postService.getPostById(id));
+        model.addAttribute("post", postService.getPostById(id));
         return "post";
     }
 
     @PostMapping("/post")
-    public String savePostForm(@ModelAttribute Post post, @RequestParam("image") MultipartFile imageFile, BindingResult result) {
-
+    public String savePostForm(@Valid @ModelAttribute Post post, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("post", post);
             return "post";
         }
 
-        postService.savePost(post, imageFile);
+        postService.savePost(post);
 
         return "redirect:/";
     }

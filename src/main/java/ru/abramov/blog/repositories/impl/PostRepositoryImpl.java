@@ -1,6 +1,8 @@
 package ru.abramov.blog.repositories.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,6 +12,7 @@ import ru.abramov.blog.repositories.PostRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -25,7 +28,7 @@ public class PostRepositoryImpl implements PostRepository {
 
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(
-                        "INSERT INTO posts (title, content, image_url, count_likes, created_at) VALUES (?, ?, ?, 0, NOW())",
+                        "INSERT INTO posts (title, content, image_url, count_likes, created_at) VALUES (?, ?, ?, 0, NOW()) returning id",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 ps.setString(1, post.getTitle());
@@ -46,4 +49,16 @@ public class PostRepositoryImpl implements PostRepository {
 
         return post;
     }
+
+    @Override
+    public Optional<Post> findById(Long id) {
+        String sql = "SELECT * FROM posts WHERE id = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Post.class), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
 }

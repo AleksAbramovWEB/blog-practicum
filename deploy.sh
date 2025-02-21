@@ -22,8 +22,9 @@ brew services stop tomcat
 echo "📦 Копирование $TOMCAT_WAR_NAME в Tomcat..."
 cp "build/libs/$TOMCAT_WAR_NAME" "$TOMCAT_HOME/webapps/"
 
-echo "Удаляем старый кэш Tomcat"
-rm -rf "$TOMCAT_HOME"/webapps/$(basename "$TOMCAT_WAR_NAME" .war)
+rm -rf "$TOMCAT_HOME/webapps/ROOT"
+
+mv "$TOMCAT_HOME/webapps/$TOMCAT_WAR_NAME" "$TOMCAT_HOME/webapps/ROOT.war"
 
 echo "Создаём setenv.sh для передачи переменных в Tomcat..."
 
@@ -32,6 +33,7 @@ cat <<EOF > "$TOMCAT_HOME/bin/setenv.sh"
 export DB_URL="$DB_URL"
 export DB_USERNAME="$DB_USERNAME"
 export DB_PASSWORD="$DB_PASSWORD"
+export UPLOAD_IMAGE_DIR="$UPLOAD_IMAGE_DIR"
 EOF
 
 chmod +x "$TOMCAT_HOME/bin/setenv.sh"
@@ -39,4 +41,4 @@ chmod +x "$TOMCAT_HOME/bin/setenv.sh"
 echo "Запуск Tomcat..."
 CATALINA_OPTS="-Dserver.port=$TOMCAT_PORT" brew services start tomcat
 
-echo "Деплой завершён! Доступно по адресу: http://localhost:$TOMCAT_PORT/$(basename "$TOMCAT_WAR_NAME" .war)"
+echo "Деплой завершён! Доступно по адресу: http://localhost:$TOMCAT_PORT"

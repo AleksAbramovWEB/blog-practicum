@@ -2,7 +2,6 @@ package ru.abramov.blog.services.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.abramov.blog.configs.AppConfig;
@@ -10,6 +9,7 @@ import ru.abramov.blog.services.ImageService;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,7 +20,6 @@ import java.util.Set;
 public class ImageServiceImpl implements ImageService {
 
     private final AppConfig appConfig;
-    private final ResourceLoader resourceLoader;
 
     private static final Set<String> ALLOWED_MIME_TYPES = Set.of("image/jpeg", "image/png", "image/gif", "image/webp");
 
@@ -46,14 +45,13 @@ public class ImageServiceImpl implements ImageService {
 
         String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
 
-        String uploadImageDir = appConfig.getUploadImageDir();
-
-        Path uploadPath = Path.of(
-                resourceLoader.getResource("classpath:/")
-                        .getFile()
-                        .getPath(),
-                uploadImageDir
+        Path uploadPath = Paths.get(
+                appConfig.getUploadImageDir()
         );
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
 
         Path imagePath = uploadPath.resolve(fileName);
 
@@ -63,7 +61,7 @@ public class ImageServiceImpl implements ImageService {
                 StandardCopyOption.REPLACE_EXISTING
         );
 
-        return Optional.of("/" + uploadImageDir + fileName);
+        return Optional.of("/static/images/" + fileName);
     }
 
 }
