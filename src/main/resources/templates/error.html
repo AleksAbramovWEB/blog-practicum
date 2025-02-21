@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Ошибка</h1>
+    <p style="color: red; font-weight: bold;" th:text="${errorMessage}">Что-то пошло не так...</p>
+    <a href="javascript:history.back()">🔙 Назад</a>
+</div>
+</body>
+</html>

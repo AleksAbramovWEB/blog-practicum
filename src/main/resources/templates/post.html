@@ -1,13 +1,42 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Пост</title>
+    <title th:text="${post.id == null ? 'Создать пост' : 'Редактировать пост'}"></title>
     <link rel="stylesheet" th:href="@{/static/css/style.css}" />
 </head>
 <body>
-<h1 th:text="${message}">Заглушка</h1>
+<div class="container">
+    <h1 th:text="${post.id == null ? 'Создать пост' : 'Редактировать пост'}"></h1>
 
-<script th:src="@{/static/js/script.js}"></script>
+    <form action="/posts/save" method="post" th:object="${post}" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+
+        <label>Заголовок:
+            <input type="text" th:field="*{title}" required>
+            <p style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+        </label>
+
+        <label>Текст:
+            <textarea th:field="*{content}" required></textarea>
+            <p style="color:red" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+        </label>
+
+        <label>Теги (через запятую):
+            <input type="text" name="tags" th:value="${tags}">
+        </label>
+
+        <label>Изображение:
+            <input type="file" name="image" accept="image/*">
+        </label>
+        <p th:if="${post.imageUrl}">
+            <img th:src="${post.imageUrl}" alt="Изображение поста" width="200">
+        </p>
+
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <a href="/">Назад</a>
+</div>
 </body>
 </html>
