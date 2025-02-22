@@ -20,11 +20,13 @@ public class PostTagServiceImpl implements PostTagService {
     private final TagRepository tagRepository;
 
 
-    public Set<String> getTagNamesByPost(Post post) {
-        return postTagRepository.getTagsByPost(post)
+    public void mapPostTads(Post post) {
+        Set<String> tags = postTagRepository.getTagsByPost(post)
                 .stream()
                 .map(Tag::getName)
                 .collect(Collectors.toSet());
+
+        post.setTags(tags);
     }
 
 

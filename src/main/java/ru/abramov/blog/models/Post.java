@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,8 +43,8 @@ public class Post {
     @Transient
     private Set<@NotBlank(message = "Тег не может быть пустым") String> tags = new HashSet<>();
 
-    @MappedCollection(idColumn = "post_id")
-    private List<Comment> comments;
+    @Transient
+    private List<Comment> comments = new ArrayList<>();
 
     @Transient
     private MultipartFile image;

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.abramov.blog.models.Post;
 import ru.abramov.blog.repositories.PostRepository;
+import ru.abramov.blog.services.CommentPostService;
 import ru.abramov.blog.services.ImageService;
 import ru.abramov.blog.services.PostService;
 import ru.abramov.blog.services.PostTagService;
@@ -20,6 +21,7 @@ public class PostServiceImpl implements PostService {
     private final ImageService imageService;
     private final PostTagService postTagService;
     private final PostRepository postRepository;
+    private final CommentPostService commentPostService;
 
     @Override
     public List<Post> getAllPosts() {
@@ -37,9 +39,8 @@ public class PostServiceImpl implements PostService {
 
         Post post = postOptional.get();
 
-        post.setTags(
-                postTagService.getTagNamesByPost(post)
-        );
+        postTagService.mapPostTads(post);
+        commentPostService.mapPostComments(post);
 
         return post;
     }

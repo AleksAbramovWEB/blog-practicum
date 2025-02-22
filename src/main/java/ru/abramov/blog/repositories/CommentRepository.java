@@ -1,9 +1,13 @@
 package ru.abramov.blog.repositories;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+
 import ru.abramov.blog.models.Comment;
 
-@Repository
-public interface CommentRepository extends CrudRepository<Comment, Long> {
+import java.util.List;
+import java.util.Map;
+
+public interface CommentRepository{
+    Comment save(Comment comment);
+    void delete(Long commentId);
+    Map<Long, List<Comment>> getCommentsByPostIds(List<Long> postIds);
 }

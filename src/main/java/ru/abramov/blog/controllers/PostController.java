@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.abramov.blog.models.Comment;
 import ru.abramov.blog.models.Post;
 import ru.abramov.blog.services.PostService;
 import org.springframework.ui.Model;
@@ -30,6 +31,11 @@ public class PostController {
     @GetMapping("/post/{id}")
     public String getPost(@PathVariable Long id, Model model) {
         model.addAttribute("post", postService.getPostById(id));
+
+        Comment comment = new Comment();
+        comment.setPostId(id);
+        model.addAttribute("comment", comment);
+
         return "post";
     }
 

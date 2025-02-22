@@ -82,6 +82,51 @@
         </form>
     </div>
 
+    <div th:if="${post.id}">
+        <div class="card p-4 mb-4">
+            <h2 th:text="'Комментарии: (всего ' + ${#lists.size(post.comments)} + ')'"></h2>
+            <form th:action="'/post/' + ${post.id} + '/comment'" method="post" th:object="${comment}">
+                <input type="hidden" th:field="*{postId}">
+                <div class="mb-3">
+                    <label for="comment-text" class="form-label">Содержание</label>
+                    <textarea class="form-control"
+                              id="comment-text"
+                              rows="3"
+                              th:field="*{text}"
+                              th:classappend="${#fields.hasErrors('text')} ? 'is-invalid' : ''">
+                </textarea>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Добавить комментарий</button>
+            </form>
+        </div>
+
+        <div th:each="commentPost : ${post.comments}" class="card p-4 mb-4">
+            <form th:action="'/post/' + ${post.id} + '/comment'"
+                  method="post"
+                  class="mb-3">
+                <input type="hidden" name="postId" th:value="${commentPost.postId}">
+                <div class="mb-3">
+                <textarea class="form-control"
+                          rows="3"
+                          name="text"
+                          th:text="${commentPost.text}">
+                </textarea>
+                </div>
+                <div class="d-flex flex-row">
+                    <button class="d-block me-2 btn btn-primary" type="submit">Применить</button>
+                    <button class="d-block me-2 btn btn-danger"
+                            type="button"
+                            th:attr="onclick='deleteComment(' + ${post.id} + ', ' + ${commentPost.id} + ')'">Удалить</button>
+                </div>
+            </form>
+            <form th:action="'/post/' + ${post.id} + '/comment/' +  ${commentPost.id}"
+                  method="post"
+                  th:id="'post-' + ${post.id} + '-comment-' +  ${commentPost.id}">
+                <input type="hidden" name="_method" value="delete">
+            </form>
+        </div>
+    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

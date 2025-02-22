@@ -12,3 +12,9 @@ $(document).ready(function () {
         }
     });
 });
+
+function deleteComment(postId, commentPostId) {
+    const form = document.getElementById('post-' + postId + '-comment-' +  commentPostId);
+
+    form.submit();
+}
