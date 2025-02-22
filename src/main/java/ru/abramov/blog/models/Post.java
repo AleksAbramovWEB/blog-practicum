@@ -7,11 +7,13 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +37,10 @@ public class Post {
 
     private LocalDateTime createdAt;
 
-    @MappedCollection(idColumn = "post_id")
-    private Set<PostTag> postTags;
+    @NotEmpty(message = "Теги не должны быть пустыми")
+    @Size(min = 1, message = "Должен быть хотя бы один тег")
+    @Transient
+    private Set<@NotBlank(message = "Тег не может быть пустым") String> tags = new HashSet<>();
 
     @MappedCollection(idColumn = "post_id")
     private List<Comment> comments;

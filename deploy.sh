@@ -26,6 +26,9 @@ rm -rf "$TOMCAT_HOME/webapps/ROOT"
 
 mv "$TOMCAT_HOME/webapps/$TOMCAT_WAR_NAME" "$TOMCAT_HOME/webapps/ROOT.war"
 
+echo "📦 Копирование статических файлов в root static..."
+cp -R src/main/resources/static/* "$TOMCAT_HOME/webapps/static/"
+
 echo "Создаём setenv.sh для передачи переменных в Tomcat..."
 
 cat <<EOF > "$TOMCAT_HOME/bin/setenv.sh"

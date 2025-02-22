@@ -1,9 +1,13 @@
 package ru.abramov.blog.repositories;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-import ru.abramov.blog.models.PostTag;
 
-@Repository
-public interface PostTagRepository extends CrudRepository<PostTag, Long> {
+import ru.abramov.blog.models.Post;
+import ru.abramov.blog.models.Tag;
+
+import java.util.List;
+
+public interface PostTagRepository {
+    void deleteAllLinksByPost(Post post);
+    void addLink(Post post, Tag tag);
+    List<Tag> getTagsByPost(Post post);
 }
