@@ -16,9 +16,13 @@
             <a class="navbar-brand" href="/">Блог</a>
         </div>
     </nav>
-    <div class="card p-4 mb-4" th:if="${post.id}">
-        <form th:action="'/post/' + ${post.id} + '/like'" method="post">
-            <button type="submit" class="btn btn-primary" th:text="'Добавить лайк (Колличество лайков: ' + ${post.countLikes} + ')'"></button>
+    <div class="card p-4 mb-4 d-flex flex-row" th:if="${post.id}">
+        <form th:action="'/post/' + ${post.id} + '/like'" method="post" class="d-block me-2">
+            <button type="submit" class="btn btn-primary mr-2" th:text="'Добавить лайк (Колличество лайков: ' + ${post.countLikes} + ')'"></button>
+        </form>
+        <form th:action="'/post/' + ${post.id}" method="post" class="d-block me-2">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" class="btn btn-danger">Удалить</button>
         </form>
     </div>
     <div class="card p-4 mb-4">
