@@ -62,6 +62,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public void addLike(Long id) {
+        Post post = getPostById(id);
+
+        post.setCountLikes(post.getCountLikes() + 1);
+
+        postRepository.save(post);
+    }
+
+    @Override
     public void deletePost(Long id) {
 
     }

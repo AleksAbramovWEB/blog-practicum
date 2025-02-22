@@ -33,6 +33,13 @@ public class PostController {
         return "post";
     }
 
+    @PostMapping("/post/{id}/like")
+    public String likePost(@PathVariable Long id) {
+        postService.addLike(id);
+
+        return "redirect:/post/" + id;
+    }
+
     @PostMapping("/post")
     public String savePostForm(@Valid @ModelAttribute Post post, BindingResult result, Model model) {
         if (result.hasErrors()) {

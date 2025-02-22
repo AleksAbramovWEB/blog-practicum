@@ -8,5 +8,6 @@ public interface PostService {
     List<Post> getAllPosts();
     Post getPostById(Long id);
     Post savePost(Post post);
+    void addLike(Long id);
     void deletePost(Long id);
 }

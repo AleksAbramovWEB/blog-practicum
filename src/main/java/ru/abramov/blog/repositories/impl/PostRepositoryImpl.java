@@ -42,8 +42,8 @@ public class PostRepositoryImpl implements PostRepository {
             }
         } else {
             jdbcTemplate.update(
-                    "UPDATE posts SET title = ?, content = ?, image_url = ? WHERE id = ?",
-                    post.getTitle(), post.getContent(), post.getImageUrl(), post.getId()
+                    "UPDATE posts SET title = ?, content = ?, image_url = ?, count_likes = ? WHERE id = ?",
+                    post.getTitle(), post.getContent(), post.getImageUrl(), post.getCountLikes(), post.getId()
             );
         }
 
