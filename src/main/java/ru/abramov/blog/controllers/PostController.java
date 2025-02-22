@@ -10,6 +10,8 @@ import ru.abramov.blog.models.Post;
 import ru.abramov.blog.services.PostService;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 @Controller
 @AllArgsConstructor
 public class PostController {
@@ -17,8 +19,10 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/")
-    public String getPosts(Model model) {
-        model.addAttribute("posts", postService.getAllPosts());
+    public String getPosts(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "") String filter, Model model) {
+        model.addAttribute("postPage", postService.getPostsWithPaginate(page, size, filter));
+        model.addAttribute("pageSizeOptions", List.of(10, 20, 50));
+        model.addAttribute("filter", filter);
         return "posts";
     }
 

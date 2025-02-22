@@ -9,8 +9,9 @@ import ru.abramov.blog.repositories.PostTagRepository;
 import ru.abramov.blog.repositories.TagRepository;
 import ru.abramov.blog.services.PostTagService;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -19,16 +20,28 @@ public class PostTagServiceImpl implements PostTagService {
     private final PostTagRepository postTagRepository;
     private final TagRepository tagRepository;
 
-
-    public void mapPostTads(Post post) {
-        Set<String> tags = postTagRepository.getTagsByPost(post)
-                .stream()
-                .map(Tag::getName)
-                .collect(Collectors.toSet());
-
-        post.setTags(tags);
+    public List<Long> getPostIdsByTagName(String tagName) {
+        return postTagRepository.getPostIdsByTagName(tagName);
     }
 
+    public void mapPostTads(Post post) {
+        mapPostTads(List.of(post));
+    }
+
+    @Override
+    public void mapPostTads(List<Post> posts) {
+        List<Long> postIds = posts.stream()
+                .map(Post::getId)
+                .toList();
+
+        Map<Long, Set<String>> tags = postTagRepository.getTagsByPostIds(postIds);
+
+        posts.forEach(post -> {
+            if (tags.containsKey(post.getId())) {
+                post.setTags(tags.get(post.getId()));
+            }
+        });
+    }
 
     @Transactional
     @Override

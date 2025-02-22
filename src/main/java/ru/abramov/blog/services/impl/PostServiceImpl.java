@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.abramov.blog.models.Post;
+import ru.abramov.blog.models.PostPage;
 import ru.abramov.blog.repositories.PostRepository;
 import ru.abramov.blog.services.CommentPostService;
 import ru.abramov.blog.services.ImageService;
 import ru.abramov.blog.services.PostService;
 import ru.abramov.blog.services.PostTagService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,21 @@ public class PostServiceImpl implements PostService {
     private final CommentPostService commentPostService;
 
     @Override
-    public List<Post> getAllPosts() {
-        return List.of();
+    public PostPage getPostsWithPaginate(int page, int pageSize, String filter) {
+        List<Long> filterIds = new ArrayList<>();
+
+        if (filter != null && !filter.isEmpty()) {
+            filterIds.addAll(
+                    postTagService.getPostIdsByTagName(filter)
+            );
+        }
+
+        PostPage postPage = postRepository.getPosts(page, pageSize, filterIds);
+
+        postTagService.mapPostTads(postPage.getContent());
+        commentPostService.mapPostComments(postPage.getContent());
+
+        return postPage;
     }
 
     @Override
@@ -57,9 +72,11 @@ public class PostServiceImpl implements PostService {
 
         path.ifPresent(post::setImageUrl);
 
+        post = postRepository.save(post);
+
         postTagService.saveByPost(post);
 
-        return postRepository.save(post);
+        return post;
     }
 
     @Override
