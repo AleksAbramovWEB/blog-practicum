@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,6 @@ import ru.abramov.blog.repositories.PostRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,30 +22,36 @@ public class PostRepositoryImpl implements PostRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PostPage getPosts(int page, int pageSize, List<Long> filterIds) {
+    public PostPage getPosts(int page, int pageSize, String filter) {
         int offset = (page - 1) * pageSize;
 
-        String sql = "SELECT * FROM posts";
-        String countSql = "SELECT COUNT(*) FROM posts";
+        String sql = "SELECT p.* FROM posts p";
+        String countSql = "SELECT COUNT(*) FROM posts p";
+
         Object[] params;
+        Object[] countParams;
 
-        if (filterIds != null && !filterIds.isEmpty()) {
-            String inSql = String.join(",", filterIds.stream().map(id -> "?").toArray(String[]::new));
-            sql += " WHERE id IN (" + inSql + ")";
-            countSql += " WHERE id IN (" + inSql + ")";
+        if (filter != null && !filter.isEmpty()) {
+            String join = " INNER JOIN post_tags pt ON p.id = pt.post_id" +
+                    " INNER JOIN tags t ON t.id = pt.tag_id AND t.name ILIKE ?";
 
-            params = filterIds.toArray();
+            sql += join;
+            countSql += join;
+
+            filter = "%" + filter + "%";
+
+            params = new Object[]{filter, pageSize, offset};
+            countParams = new Object[]{filter};
         } else {
-            filterIds = new ArrayList<>();
-            params = new Object[]{};
+            params = new Object[]{pageSize, offset};
+            countParams = new Object[]{};
         }
 
-        sql += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
-        params = appendToArray(params, pageSize, offset);
+        sql += " ORDER BY p.created_at DESC LIMIT ? OFFSET ?";
 
         List<Post> posts = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Post.class), params);
 
-        Long totalItems = jdbcTemplate.queryForObject(countSql, Long.class, filterIds.toArray());
+        Long totalItems = jdbcTemplate.queryForObject(countSql, Long.class, countParams);
         totalItems = (totalItems != null) ? totalItems : 0;
 
         return new PostPage(posts, page, pageSize, totalItems);
@@ -98,12 +102,5 @@ public class PostRepositoryImpl implements PostRepository {
     public void delete(Long id) {
         String sql = "DELETE FROM posts WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    private Object[] appendToArray(Object[] array, Object... elements) {
-        Object[] newArray = new Object[array.length + elements.length];
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        System.arraycopy(elements, 0, newArray, array.length, elements.length);
-        return newArray;
     }
 }

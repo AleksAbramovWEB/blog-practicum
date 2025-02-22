@@ -12,8 +12,6 @@ import ru.abramov.blog.services.ImageService;
 import ru.abramov.blog.services.PostService;
 import ru.abramov.blog.services.PostTagService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,15 +25,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostPage getPostsWithPaginate(int page, int pageSize, String filter) {
-        List<Long> filterIds = new ArrayList<>();
 
-        if (filter != null && !filter.isEmpty()) {
-            filterIds.addAll(
-                    postTagService.getPostIdsByTagName(filter)
-            );
-        }
-
-        PostPage postPage = postRepository.getPosts(page, pageSize, filterIds);
+        PostPage postPage = postRepository.getPosts(page, pageSize, filter);
 
         postTagService.mapPostTads(postPage.getContent());
         commentPostService.mapPostComments(postPage.getContent());
