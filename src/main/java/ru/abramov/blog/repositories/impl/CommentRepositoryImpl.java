@@ -1,7 +1,6 @@
 package ru.abramov.blog.repositories.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

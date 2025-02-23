@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringJUnitConfig(classes = {TestConfig.class})
 @WebAppConfiguration
-class PostControllerIntegrationTest {
+class PostControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
