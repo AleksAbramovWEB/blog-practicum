@@ -28,6 +28,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.36")
 
     testImplementation("org.springframework:spring-test:6.1.3")
+    testImplementation("org.mockito:mockito-core:5.15.2")
+    testImplementation("org.hamcrest:hamcrest:2.2")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -45,4 +47,10 @@ tasks.war {
     archiveFileName.set(
         System.getenv("TOMCAT_WAR_NAME") ?: "app.war"
     )
+}
+
+tasks.processTestResources {
+    from("src/main/resources/db/schema.sql") {
+        into("db")
+    }
 }

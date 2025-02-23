@@ -2,9 +2,9 @@ package ru.abramov.blog.services.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.abramov.blog.configs.AppConfig;
 import ru.abramov.blog.services.ImageService;
 
 import java.nio.file.Files;
@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    private final AppConfig appConfig;
+    private final Environment environment;
 
     private static final Set<String> ALLOWED_MIME_TYPES = Set.of("image/jpeg", "image/png", "image/gif", "image/webp");
 
@@ -46,7 +46,9 @@ public class ImageServiceImpl implements ImageService {
         String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
 
         Path uploadPath = Paths.get(
-                appConfig.getUploadImageDir()
+                Objects.requireNonNull(
+                        environment.getProperty("upload.image.dir")
+                )
         );
 
         if (!Files.exists(uploadPath)) {
