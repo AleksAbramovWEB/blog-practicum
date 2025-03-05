@@ -1,4 +1,4 @@
-package ru.abramov.blog.configs;
+package ru.abramov.blog.test.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

@@ -20,7 +20,6 @@ import java.util.Set;
 public class ImageServiceImpl implements ImageService {
 
     private final Environment environment;
-
     private static final Set<String> ALLOWED_MIME_TYPES = Set.of("image/jpeg", "image/png", "image/gif", "image/webp");
 
     @SneakyThrows
@@ -63,7 +62,7 @@ public class ImageServiceImpl implements ImageService {
                 StandardCopyOption.REPLACE_EXISTING
         );
 
-        return Optional.of("/static/images/" + fileName);
+        return Optional.of("/" + fileName);
     }
 
 }
