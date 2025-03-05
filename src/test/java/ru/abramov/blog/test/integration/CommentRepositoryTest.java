@@ -4,27 +4,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import ru.abramov.blog.models.Comment;
 import ru.abramov.blog.repositories.CommentRepository;
-import ru.abramov.blog.test.configs.TestConfig;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringJUnitConfig(classes = {TestConfig.class})
-@WebAppConfiguration
-public class CommentRepositoryTest {
+public class CommentRepositoryTest extends AbstractIntegrationTest {
 
     @Autowired
     private CommentRepository commentRepository;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {

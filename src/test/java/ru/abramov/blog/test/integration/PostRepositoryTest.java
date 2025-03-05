@@ -4,27 +4,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import ru.abramov.blog.models.Post;
 import ru.abramov.blog.models.PostPage;
 import ru.abramov.blog.repositories.PostRepository;
-import ru.abramov.blog.test.configs.TestConfig;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringJUnitConfig(classes = {TestConfig.class})
-@WebAppConfiguration
-public class PostRepositoryTest {
+public class PostRepositoryTest extends AbstractIntegrationTest {
 
     @Autowired
     private PostRepository postRepository;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {

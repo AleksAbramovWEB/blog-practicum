@@ -1,4 +1,0 @@
-db.url=${TEST_DB_URL}
-db.username=${TEST_DB_USERNAME}
-db.password=${TEST_DB_PASSWORD}
-upload.image.dir=${TEST_UPLOAD_IMAGE_DIR}

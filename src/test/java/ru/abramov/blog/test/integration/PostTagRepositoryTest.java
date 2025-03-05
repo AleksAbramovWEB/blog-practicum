@@ -4,13 +4,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import ru.abramov.blog.models.Post;
 import ru.abramov.blog.models.Tag;
 import ru.abramov.blog.repositories.PostTagRepository;
-import ru.abramov.blog.test.configs.TestConfig;
 
 import java.util.List;
 import java.util.Map;
@@ -18,15 +14,10 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringJUnitConfig(classes = {TestConfig.class})
-@WebAppConfiguration
-public class PostTagRepositoryTest {
+public class PostTagRepositoryTest extends AbstractIntegrationTest {
 
     @Autowired
     private PostTagRepository postTagRepository;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     private Post post;
     private Tag tag1;

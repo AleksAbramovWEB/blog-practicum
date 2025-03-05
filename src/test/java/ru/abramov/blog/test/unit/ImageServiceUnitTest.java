@@ -1,7 +1,6 @@
 package ru.abramov.blog.test.unit;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@Disabled
 @SpringJUnitConfig(classes = ImageServiceUnitTest.Config.class)
 class ImageServiceUnitTest {
 
@@ -35,7 +33,7 @@ class ImageServiceUnitTest {
     @Autowired
     private ImageService imageService;
 
-    private static final String UPLOAD_DIR = "/tmp/images";
+    private static final String UPLOAD_DIR = System.getenv("TEST_UPLOAD_IMAGE_DIR");
 
     @BeforeEach
     void setUp() throws Exception {
@@ -85,9 +83,7 @@ class ImageServiceUnitTest {
         Optional<String> result = imageService.save(imageFile);
 
         assertTrue(result.isPresent());
-        assertTrue(result.get().startsWith("/static/images/"));
-
-        Path savedFile = Path.of(UPLOAD_DIR, result.get().replace("/static/images/", ""));
+        Path savedFile = Path.of(UPLOAD_DIR, result.get());
         assertTrue(Files.exists(savedFile));
 
         Files.deleteIfExists(savedFile);
